@@ -11,6 +11,8 @@
 #include <vector>
 #include <map>
 
+#include "Account.h"
+
 using namespace std;
 
 enum COMMAND
@@ -22,23 +24,15 @@ enum COMMAND
     SHOWALLINFO = 5,
     EXIT = 6
 };
-struct Account
-{
-    int AccountID = 0;
-    int Money = 0;
-    string Name = "";
-};
 
-map<int, Account> AccountList;
-vector<int> AccountIDList;
+Account *AccountList[100];
+int AccountCnt = 0;
 
 void ShowUserInfo();
-void ShowUserInfo(int id);
 void ShowAllUserInfo();
 void CreateAccount();
 void Deposit();
 void WithDraw();
-bool IsExistAccount(int id);
 
 int main()
 {
@@ -84,49 +78,40 @@ int main()
 
 void CreateAccount()
 {
-    string name;
+    int id, money;
+    char name[100];
     cout << "[계좌 생성]\n";
+    cout << "계좌 번호를 입력해주세요 : "; cin >> id;
     cout << "이름 입력해주세요 : "; cin >> name;
-    int id = AccountIDList.size();
-    AccountIDList.push_back(id);
+    cout << "금액을 입력해주세요 : "; cin >> money;
 
-    Account newAccount;
-    newAccount.Name = name;
-    newAccount.AccountID = id;
-
-    AccountList[id] = newAccount;
-
-    cout << "고객의 이름        : " << AccountList[id].Name << "\n";
-    cout << "고객의 계좌 번호   : " << AccountList[id].AccountID << "\n";
-    cout << "계좌 잔액          : " << AccountList[id].Money << "\n";
-    cout << "======================================================\n";
+    AccountList[AccountCnt++] = new Account(id, money, name);
 }
+
 void ShowUserInfo()
 {
     int id;
     cout << "[계좌 조회]\n";
     cout << "계좌번호를 입력해주세요 : "; cin >> id;
-    if(!IsExistAccount(id)) return;
+    
 
-    cout << "고객의 이름        : " << AccountList[id].Name << "\n";
-    cout << "고객의 계좌 번호   : " << AccountList[id].AccountID << "\n";
-    cout << "계좌 잔액          : " << AccountList[id].Money << "\n";
-    cout << "======================================================\n";
-}
-void ShowUserInfo(int id)
-{
-    cout << "[계좌 조회]\n";
-
-    cout << "고객의 이름        : " << AccountList[id].Name << "\n";
-    cout << "고객의 계좌 번호   : " << AccountList[id].AccountID << "\n";
-    cout << "계좌 잔액          : " << AccountList[id].Money << "\n";
+    for(int i = 0; i < AccountCnt; i++)
+    {
+        if(AccountList[i]->accountID == id)
+        {
+            AccountList[i]->ShowUserInfo();
+            return;
+        }
+    }
+    cout << "존재하지 않는 계좌번호 입니다.\n";
     cout << "======================================================\n";
 }
 void ShowAllUserInfo()
 {
-    if(AccountIDList.size())
-        for (int id : AccountIDList)
-            ShowUserInfo(id);
+    for(int i = 0; i < AccountCnt; i++)
+    {
+        AccountList[i]->ShowUserInfo();
+    }
 }
 void Deposit()
 {
@@ -134,38 +119,35 @@ void Deposit()
     cout << "[입금]\n";
     cout << "계좌번호를 입력해주세요 : "; cin >> id;
     cout << "입금할 금액을 입력해주세요 : "; cin >> money;
-    AccountList[id].Money += money;
 
 
-    cout << money << "원 입금이 완료되었습니다.\n";
-    cout << "잔액 : " << AccountList[id].Money << "원\n";
+    for(int i = 0; i < AccountCnt; i++)
+    {
+        if(AccountList[i]->accountID == id)
+        {
+            AccountList[i]->Deposit(money);
+            return;
+        }
+    }
+    cout << "존재하지 않는 계좌번호 입니다.\n";
     cout << "======================================================\n";
 }
+
 void WithDraw()
 {
     int id, money;
     cout << "[출금]\n";
     cout << "계좌번호를 입력해주세요 : "; cin >> id;
     cout << "출금할 금액을 입력해주세요 : "; cin >> money;
-    if(AccountList[id].Money >= money)
+
+    for(int i = 0; i < AccountCnt; i++)
     {
-        AccountList[id].Money -= money;
-        cout << money << "원 출금이 완료되었습니다.\n";
+        if(AccountList[i]->accountID == id)
+        {
+            AccountList[i]->WithDraw(money);
+            return;
+        }
     }
-    else
-    {   
-        cout << "잔액이 부족합니다.\n";
-    }
-    cout << "잔액 : " << AccountList[id].Money << "원\n";
-    cout << "======================================================\n";
-}
-
-bool IsExistAccount(int id)
-{
-    for(int _id : AccountIDList)
-        if(_id == id) return true;
-
-    
     cout << "존재하지 않는 계좌번호 입니다.\n";
-    return false;
+    cout << "======================================================\n";
 }
