@@ -29,6 +29,18 @@ class NameCard
             strcpy(company, _company);
             strcpy(phoneNumber, _phoneNumber);
         }
+        // 복사 생성자 구현
+        NameCard(NameCard &nameCard)
+        {
+            name = new char[strlen(nameCard.name) + 1];
+            company = new char[strlen(nameCard.company) + 1];
+            phoneNumber = new char[strlen(nameCard.phoneNumber) + 1];
+
+            strcpy(name, nameCard.name);
+            strcpy(company, nameCard.company);
+            strcpy(phoneNumber, nameCard.phoneNumber);
+        }
+
         void ShowPosition(POS pos) const
         {
             switch (pos)
@@ -60,5 +72,13 @@ class NameCard
             cout << "회사 : " << company << "\n";
             cout << "전화번호 : " << phoneNumber << "\n";
             ShowPosition(pos);
+        }
+        ~NameCard()
+        {
+            delete []name;
+            delete []company;
+            delete []phoneNumber;
+
+            cout << "Destructer\n";
         }
 };
