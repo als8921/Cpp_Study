@@ -12,7 +12,7 @@ class Person{
             this->name = new char[strlen(name) + 1];
             strcpy(this->name, name);
         }
-        Person(Person &person) : age(person.age)
+        explicit Person(Person &person) : age(person.age)
         {
             this->name = new char[strlen(person.name) + 1];
             strcpy(this->name, person.name);
@@ -29,5 +29,5 @@ class Person{
 int main()
 {
     Person p1("assd", 12);
-    Person p2 = p1;
+    Person p2(p1);
 }
