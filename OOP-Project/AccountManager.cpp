@@ -97,7 +97,7 @@ void ShowUserInfo()
 
     for(int i = 0; i < AccountCnt; i++)
     {
-        if(AccountList[i]->accountID == id)
+        if(AccountList[i]->GetAccountID() == id)
         {
             AccountList[i]->ShowUserInfo();
             return;
@@ -123,7 +123,7 @@ void Deposit()
 
     for(int i = 0; i < AccountCnt; i++)
     {
-        if(AccountList[i]->accountID == id)
+        if(AccountList[i]->GetAccountID() == id)
         {
             AccountList[i]->Deposit(money);
             return;
@@ -142,7 +142,7 @@ void WithDraw()
 
     for(int i = 0; i < AccountCnt; i++)
     {
-        if(AccountList[i]->accountID == id)
+        if(AccountList[i]->GetAccountID() == id)
         {
             AccountList[i]->WithDraw(money);
             return;

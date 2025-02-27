@@ -7,10 +7,10 @@ class Account
 {
     private:
         int money;
+        int accountID;
         char * name;
 
     public:
-        int accountID;
         Account(int accountID, int money, char *name)
         {
             this->accountID = accountID;
@@ -18,7 +18,15 @@ class Account
             this->name = new char[strlen(name) + 1];
             strcpy(this->name, name);
         }
+        
+        Account(Account &account)
+            :money(account.money), accountID(account.accountID)
+        {
+            name = new char[strlen(account.name) + 1];
+            strcpy(name, account.name);
+        }
 
+        int GetAccountID() { return accountID; }
 
         inline void ShowUserInfo() const
         {
